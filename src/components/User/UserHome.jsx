@@ -1,4 +1,5 @@
 import React,{useState} from 'react'
+import { Outlet, useLocation } from "react-router-dom";
 
 import userpic from '../../assets/userpic.jpg'
 import respic1 from '../../assets/respic1.avif'
@@ -7,30 +8,21 @@ import respic3 from '../../assets/respic3.avif'
 
 
 const UserHome = () => {
+
+
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const _id = searchParams.get("user_id");
+  console.log("useridin home ",_id);
+  
         
        
      
   return (
-  <>
+ 
   
-   
-  
-    <div className='flex-grow bg-slate-100 py-10 overflow-scroll mt-24' >
-            <div className='bg-gray-500 container m-auto mx-auto items-center  flex justify-around flex-col md:flex-row sm:flex-row' >
-                
-                    <img src={userpic} alt="" className='p-1 max-w-[500px] max-h-[500px] '/>
-                    <div className=' items-center justify-center text-white h-96 text-center font-bold mb-3 mt-6 '>
-                        <h1 className='sm:text-lg md:text-xl lg:text-3xl xl:text-4xl mb-2'>lets </h1>
-                        <h2 className='sm:text-lg md:text-xl lg:text-2xl xl:text-3xl mb-2'>do</h2>
-                        <h1 className='sm:text-lg md:text-2xl lg:text-3xl xl:text-5xl mb-2'>Foodie Buddie</h1>
-                        <p className='sm:text-sm md:text-lg lg:text-xl xl:text-2xl mb-10'>we are here to server you and your loved ones</p>
-                        <p>go to signup</p>
-                        <p>and start</p>
-                        <p>ordering your selfs </p>
-    
-    
-                    </div>
-    
+    <div className=' bg-slate-100  overflow-scroll ' >
+            <div>
                 
             </div>
             <div className='flex flex-col items-center w-full justify-center gap-11 mt-4'>
@@ -66,7 +58,7 @@ const UserHome = () => {
    
 
   
-  </>
+  
   )
 }
 

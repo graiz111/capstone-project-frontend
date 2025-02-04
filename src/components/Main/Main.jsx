@@ -17,7 +17,7 @@ const Main = () => {
   return (
   <>
      
-        <div className='flex-grow bg-green-100 py-10 overflow-scroll mt-24'>
+        <div className='   overflow-scroll  '>
             <div className='bg-gray-500 container m-auto mx-auto items-center  flex justify-around flex-col md:flex-row sm:flex-row' >
                 
                     <img src={userpic} alt="" className='p-1 max-w-[500px] max-h-[500px] '/>
