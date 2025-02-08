@@ -3,11 +3,16 @@ import { FiSearch, FiX } from "react-icons/fi";
 import { IoCart } from "react-icons/io5";
 import { NavLink } from "react-router-dom";
 import logo from '../../assets/logo.png'
+import { useLocation } from "react-router-dom";
+
 
 
 const DeliveryHeader = ({ isOpen, setIsOpen }) => {
   const [showSearch, setShowSearch] = useState(false);
   const searchRef = useRef(null);
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const delivery_id = searchParams.get("delivery_id");
 
   const toggleDropdown = () => {
     setIsOpen(!isOpen);
@@ -86,23 +91,29 @@ const DeliveryHeader = ({ isOpen, setIsOpen }) => {
           {isOpen && (
             <div className="absolute right-0 mt-2 w-48 p-2 bg-green-100 border border-gray-300 rounded-lg shadow-lg">
               <ul className="p-1 space-y-1">
-                <li className="p-2 hover:bg-gray-200 cursor-pointer bg-green-300 rounded-full shadow-lg">
+                {!delivery_id?(<>
+                  <li className="p-2 hover:bg-gray-200 cursor-pointer bg-green-300 rounded-full shadow-lg">
                   <NavLink to="/delivery/signup?role=delivery">SignUp</NavLink>
                 </li>
                 <li className="p-2 hover:bg-gray-200 cursor-pointer bg-yellow-300 rounded-full shadow-lg">
                   <NavLink to="/delivery/login?role=delivery">Login</NavLink>
                 </li>
-                <li className="p-2 hover:bg-gray-200 cursor-pointer bg-blue-200 rounded-full shadow-lg">
-                  <NavLink to="/delivery/delorders">Orders</NavLink>
-                </li>
+                </>):
+                  (<>
+                  <li className="p-2 hover:bg-gray-200 cursor-pointer bg-blue-200 rounded-full shadow-lg">
+                    <NavLink to={`/delivery/delorders?delivery_id=${delivery_id}`}>Orders</NavLink>
+                  </li>
+                  <li className="p-2 hover:bg-gray-200 cursor-pointer bg-red-200 rounded-full shadow-lg">
+                    <NavLink to="/delivery">LogOut</NavLink>
+                  </li>
+                  </>)
+                  }
+              
                 <li className="p-2 hover:bg-gray-200 cursor-pointer bg-purple-200 rounded-full shadow-lg">
                   <NavLink to="/">Home</NavLink>
                 </li>
                 <li className="p-2 hover:bg-gray-200 cursor-pointer bg-orange-200 rounded-full shadow-lg">
                   <NavLink to="/delivery/contact-us">Contact Us</NavLink>
-                </li>
-                <li className="p-2 hover:bg-gray-200 cursor-pointer bg-red-200 rounded-full shadow-lg">
-                  <NavLink to="/delivery">LogOut</NavLink>
                 </li>
               </ul>
             </div>

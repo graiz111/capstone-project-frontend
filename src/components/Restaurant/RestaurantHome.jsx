@@ -13,16 +13,16 @@ const RestaurantHome = () => {
     const [User, setUser] = useState({})
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
-    const _id = searchParams.get("user_id");
-    console.log("residin home ",_id);
+    const restaurant_id = searchParams.get("restaurant_id");
+    console.log("residin home ",restaurant_id);
 
     useEffect(() => {
-        if (!_id) return;
+        if (!restaurant_id) return;
     
         const fetchUserDetails = async () => {
           try {
-            const response = await axios.get(`http://localhost:5001/api/restaurant/users`, {
-              params: { _id }, // Pass _id in query parameters
+            const response = await axios.get(`http://localhost:5001/api/restaurant/users/${restaurant_id}`, {
+               // Pass _id in query parameters
               withCredentials: true, // Ensures cookies are sent if needed
             });
           
@@ -33,7 +33,7 @@ const RestaurantHome = () => {
         };
     
         fetchUserDetails();
-      }, [_id]);
+      }, [restaurant_id]);
       console.log('reshomeuseeffect',User);
       
        
@@ -42,7 +42,7 @@ const RestaurantHome = () => {
  
     
     <div className='flex-grow  py-10 overflow-scroll ' >
-    {!User ? (
+    
         <div className="bg-black container mx-auto items-center flex justify-around flex-col md:flex-row sm:flex-row">
             <img src={respic} alt="" className="p-1 max-w-[500px] max-h-[500px]" />
             <div className="items-center justify-center text-white h-96 text-center font-bold mb-3 mt-6">
@@ -50,12 +50,12 @@ const RestaurantHome = () => {
             <h2 className="sm:text-lg md:text-xl lg:text-2xl xl:text-3xl mb-2">to</h2>
             <h1 className="sm:text-lg md:text-2xl lg:text-3xl xl:text-5xl mb-2">Foodie Buddie</h1>
             <p className="mb-10">We are here to serve our kings</p>
-            <button className="bg-orange-500 p-3 rounded-lg">
+            {!restaurant_id?<button className="bg-orange-500 p-3 rounded-lg">
                 <NavLink to="/restaurant/signup?role=restaurant">ADD RESTAURANT</NavLink>
-            </button>
+            </button>:null}
             </div>
         </div>
-        ) : null}
+        
 
         <div className='flex flex-col items-center w-full justify-center gap-11 mt-4'>
             <div className='mx-auto flex w-full items-center gap-1 px-4 justify-center mt-6 text-3xl font-bold'>

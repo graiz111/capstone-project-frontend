@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { useLocation,useNavigate } from "react-router-dom";
 import axios from 'axios';
+import { useSelector, useDispatch } from 'react-redux'
+import { addUser } from "../../redux/Slices/userSlice";
+import { ToastContainer, toast } from 'react-toastify';
 
 const UserLogin = () => {
   const location = useLocation();
@@ -8,29 +11,31 @@ const UserLogin = () => {
   const role = searchParams.get("role") 
 
   const [showOtp, setShowOtp] = useState(false);
-  const [errorMessage, setErrorMessage] = useState(""); // State for error message
-  const [userDetails, setUserDetails] = useState(null); // Store user details (id, email)
+  const [errorMessage, setErrorMessage] = useState(""); 
+  const [userDetails, setUserDetails] = useState(null); 
   const navigate = useNavigate();
+  const dispatch = useDispatch()
+  const user = useSelector((state) => state.useradd.value)
 
   const handleLogin = async (e) => {
     e.preventDefault();
     const email = e.target.email.value;
     const password = e.target.password.value;
   
+    toast.success("wait for otp")
     try {
       const response = await axios.post(`http://localhost:5001/api/${role}/login`, {
         email,
         password,
-      });
+      },
+      { withCredentials: true });
   
-      // If login is successful, set user details (email and id from response)
-      setUserDetails({ email, _id: response.data._id });
+      setUserDetails({ email, _id: response.data._id ,role});
   
-      // Show backend message if available
       if (response.data.message) {
         setErrorMessage(response.data.message);
       } else {
-        setErrorMessage(""); // Clear any previous error messages
+        setErrorMessage("");
       }
   
       setShowOtp(true);
@@ -45,10 +50,8 @@ const UserLogin = () => {
     e.preventDefault();
     const otp = e.target.otp.value;
   
-    if (!userDetails || !userDetails.email || !userDetails._id) {
-      setErrorMessage("User details missing, please try again.");
-      return;
-    }
+    console.log(userDetails,otp,role);
+    
   
     try {
       const response = await axios.post(
@@ -57,24 +60,31 @@ const UserLogin = () => {
           email: userDetails.email,
           otp,
           role,
-          _id: userDetails._id,
+          _id:userDetails._id
+          
         },
         { withCredentials: true }
       );
   
-      if (response.data.message) {
-        setErrorMessage(response.data.message);
+      if (response.data.success) {
+        toast.success(response.data.message);
       } else {
-        setErrorMessage(""); // Clear error if OTP is valid
+        
+        
+        setErrorMessage(response.data.message || "Something went wrong");
       }
-  
+      
+      
       console.log("OTP verified successfully:", response.data);
   
       if (response.data?.data?._id) {
         console.log(response.data?.data?._id);
+        dispatch(addUser(response.data.data))
+        console.log("reduxuser",user)
+        
         
         setTimeout(() => {
-          navigate(`/${role}?user_id=${encodeURIComponent(response.data.data._id)}`);
+          navigate(`/${role}?${role}_id=${encodeURIComponent(response.data?.data?._id)}`);
         }, 1500);
       } else {
         setErrorMessage("Unexpected response from server. Please try again.");
@@ -98,7 +108,6 @@ const UserLogin = () => {
       <div className={`${backgroundColors[role]} max-w-md mx-auto mt-10 p-6 shadow-xl rounded-2xl`}>
         <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
 
-        {/* Display error message */}
         {errorMessage && (
           <div className="bg-red-200 text-red-800 p-2 rounded-lg mb-4 text-center">
             {errorMessage}
@@ -163,6 +172,7 @@ const UserLogin = () => {
           </form>
         )}
       </div>
+      <ToastContainer/>
     </div>
   );
 }

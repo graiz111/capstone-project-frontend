@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { FiSearch, FiX } from "react-icons/fi";
 import logo from '../../assets/logo.png'
+import ThemeToggle from "../../context/ThemeToggle";
 
 
 const Header = ({ isOpen, setIsOpen }) => {
@@ -70,7 +71,8 @@ const Header = ({ isOpen, setIsOpen }) => {
         </div>
       </div>
 
-      <div className="relative">
+      <div className="relative flex gap-12">
+        <ThemeToggle/>
         <div className="cursor-pointer" onClick={toggleDropdown}>
           <img
             src="https://uxwing.com/wp-content/themes/uxwing/download/peoples-avatars/man-user-color-icon.png"

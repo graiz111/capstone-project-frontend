@@ -9,6 +9,10 @@ const UserHeader = ({ isOpen, setIsOpen,profilepic }) => {
   const [showSearch, setShowSearch] = useState(false);
   const searchRef = useRef(null);
   const navigate = useNavigate();
+   const location = useLocation();
+     const searchParams = new URLSearchParams(location.search);
+     const user_id = searchParams.get("user_id");
+     console.log("userlayout",user_id);
   
 
   const toggleDropdown = () => {
@@ -16,7 +20,7 @@ const UserHeader = ({ isOpen, setIsOpen,profilepic }) => {
   };
 
   const openCart = () => {
-    navigate("/user/usercart");
+    navigate(`/user/usercart?user_id=${user_id}`);
   };
 
   useEffect(() => {
@@ -97,13 +101,13 @@ const UserHeader = ({ isOpen, setIsOpen,profilepic }) => {
             <div className="absolute right-0 mt-2 w-48 p-2 bg-green-100 border border-gray-300 rounded-lg shadow-lg">
               <ul className="p-1 space-y-1">
                 <li className="p-2 hover:bg-gray-200 cursor-pointer bg-green-200 rounded-full shadow-lg">
-                  <NavLink to="/user/profile">Profile</NavLink>
+                  <NavLink to={`/user/settings?user_id=${user_id}`}>Profile</NavLink>
                 </li>
                 <li className="p-2 hover:bg-gray-200 cursor-pointer bg-orange-200 rounded-full shadow-lg">
-                  <NavLink to="/user/orders">Orders</NavLink>
+                  <NavLink to={`/user/orders?user_id=${user_id}`}>Orders</NavLink>
                 </li>
                 <li className="p-2 hover:bg-gray-200 cursor-pointer bg-purple-200 rounded-full shadow-lg">
-                  <NavLink to="/user/addaddress">Add Address</NavLink>
+                  <NavLink to={`/user/addaddress?user_id=${user_id}`}>Add Address</NavLink>
                 </li>
                 <li className="p-2 hover:bg-gray-200 cursor-pointer bg-orange-200 rounded-full shadow-lg">
                   <NavLink to="/user">Home</NavLink>

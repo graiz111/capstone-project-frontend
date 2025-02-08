@@ -10,18 +10,17 @@ const RestaurantHeader = ({isOpen,setIsOpen}) => {
   const searchRef = useRef(null);
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
-  const _id = searchParams.get("user_id");
-  console.log("residin home ",_id);
+  const restaurant_id = searchParams.get("restaurant_id");
 
   useEffect(() => {
-      if (!_id) return;
+      if (!restaurant_id) return;
   
       const fetchUserDetails = async () => {
         try {
-          const response = await axios.get(`http://localhost:5001/api/restaurant/users`, {
-            params: { _id }, // Pass _id in query parameters
-            withCredentials: true, // Ensures cookies are sent if needed
+          const response = await axios.get(`http://localhost:5001/api/restaurant/users/${restaurant_id}`, {
+            
           });
+        console.log(response.data);
         
           setUser(response.data);
           
@@ -31,8 +30,7 @@ const RestaurantHeader = ({isOpen,setIsOpen}) => {
       };
   
       fetchUserDetails();
-    }, [_id]);
-    console.log('user',User);
+    }, [restaurant_id]);
     const Profilepic=User.profilePic
 
   const toggleDropdown = () => {
@@ -63,7 +61,7 @@ const RestaurantHeader = ({isOpen,setIsOpen}) => {
           <img src={logo} alt="Logo" className="w-full h-full object-contain" />
         </div>
         <h1 className="text-lg sm:text-2xl md:text-3xl font-bold text-white hidden sm:block">
-          Foodie Buddie Restaurant
+          {User.name ? `${User.name.toUpperCase()} RESTAURANT` : "FOODIE BUDDIE RESTAURANT"}
         </h1>
       </div>
 
@@ -114,18 +112,25 @@ const RestaurantHeader = ({isOpen,setIsOpen}) => {
           {isOpen && (
             <div className="absolute right-0 mt-2 w-48 p-2 bg-green-100 border border-gray-300 rounded-lg shadow-lg">
               <ul className="p-1 space-y-1">
-                {!User?(<li className="p-2 hover:bg-gray-200 cursor-pointer bg-green-300 rounded-full">
-                  <NavLink to="/restaurant/login?role=restaurant">Login</NavLink>
-                </li>):null}
-                <li className="p-2 hover:bg-gray-200 cursor-pointer bg-orange-200 rounded-full">
-                  <NavLink to="/restaurant/orders">Orders</NavLink>
-                </li>
-                <li className="p-2 hover:bg-gray-200 cursor-pointer bg-orange-200 rounded-full">
-                  <NavLink to="/restaurant/menu">Items</NavLink>
-                </li>
-                <li className="p-2 hover:bg-gray-200 cursor-pointer bg-orange-200 rounded-full">
-                  <NavLink to="/restaurant/settings">Settings</NavLink>
-                </li>
+              {!restaurant_id ? (
+                  <li className="p-2 hover:bg-gray-200 cursor-pointer bg-green-300 rounded-full">
+                    <NavLink to="/restaurant/login?role=restaurant">Login</NavLink>
+                  </li>
+                ) : (
+                  <>
+                    <li className="p-2 hover:bg-gray-200 cursor-pointer bg-blue-200 rounded-full">
+                      <NavLink to={`/restaurant/orders?restaurant_id=${restaurant_id}`}>Orders</NavLink>
+                    </li>
+                    <li className="p-2 hover:bg-gray-200 cursor-pointer bg-red-200 rounded-full">
+                      <NavLink to={`/restaurant/menu?restaurant_id=${restaurant_id}`}>Items</NavLink>
+                    </li>
+                    <li className="p-2 hover:bg-gray-200 cursor-pointer bg-orange-200 rounded-full">
+                      <NavLink to={`/restaurant/settings?restaurant_id=${restaurant_id}`}>Settings</NavLink>
+                    </li><li className="p-2 hover:bg-gray-200 cursor-pointer bg-yellow-200 rounded-full">
+                      <NavLink to={`/restaurant/settings?restaurant_id=${restaurant_id}`}>LogOut</NavLink>
+                    </li>
+                  </>
+                )}
                 <li className="p-2 hover:bg-gray-200 cursor-pointer bg-orange-200 rounded-full">
                   <NavLink to="/restaurant">Home</NavLink>
                 </li>

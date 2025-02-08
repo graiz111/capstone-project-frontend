@@ -1,19 +1,20 @@
 import { Navigate, Outlet } from "react-router-dom";
-const getCookie = (name) => {
-  const match = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
-  return match ? match[2] : null;
-};
+import { useSelector } from "react-redux";
 
-const ProtectedRoute = () => {
-  const token = getCookie("token");
+const ProtectedRoute = ({ allowedRoles }) => {
+  const { isAuthenticated, role } = useSelector(state => state.auth);
 
-  return token ? <Outlet /> : <Navigate to="/" />;
+  // Check if the user is not authenticated
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />;
+  }
+
+  // If the user doesn't have the required role, redirect to unauthorized page or home
+  if (allowedRoles && !allowedRoles.includes(role)) {
+    return <Navigate to="/unauthorized" replace />;
+  }
+
+  return <Outlet />; // Render the child routes
 };
 
 export default ProtectedRoute;
-
-// const ProtectedRoute = () => {
-//   const token = localStorage.getItem("token"); // Check token
-//   return token ? <Outlet /> : <Navigate to="/" />;
-// };
-
